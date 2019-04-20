@@ -24,9 +24,17 @@
     NSColor     *bgColor;
     NSColor     *cellColor;
     NSColor     *cellBorderColor;
+    
+    // Cell selection
+    NSRect selection;
 }
 
 // Load defaults listener
 - (void)loadDefaults:(NSNotification *)notification;
+
+- (NSPoint)convertFromCellToView:(NSPoint)cell;
+- (NSPoint)convertFromViewToCell:(NSPoint)pixel;
+- (NSRect)cellRect:(NSPoint)cell;
+- (NSRect)cellsRect:(NSRect)cells;
 
 @end

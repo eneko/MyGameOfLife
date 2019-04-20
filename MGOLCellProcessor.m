@@ -150,19 +150,20 @@
 
 - (void)flipCell:(NSPoint)cell
 {
-    cellsNow[(int)cell.x][(int)cell.y] = !cellsNow[(int)cell.x][(int)cell.y];
+     // Add 1 for border buffer
+    cellsNow[(int)cell.x+1][(int)cell.y+1] = !cellsNow[(int)cell.x+1][(int)cell.y+1];
     [self replicateBorderCells];
 }
 
 - (void)setCell:(NSPoint)cell alive:(BOOL)state
 {
-    cellsNow[(int)cell.x][(int)cell.y] = (state)? 1:0;
+    cellsNow[(int)cell.x+1][(int)cell.y+1] = (state)? 1:0;  // Add 1 for border buffer
     [self replicateBorderCells];
 }
 
 - (BOOL)isCellAlive:(NSPoint)cell
 {
-    return cellsNow[(int)cell.x][(int)cell.y];
+    return cellsNow[(int)cell.x+1][(int)cell.y+1]; // Add 1 for border buffer
 }
 
 - (NSSize)worldSize

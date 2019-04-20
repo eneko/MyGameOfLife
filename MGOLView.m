@@ -22,6 +22,8 @@
         [nc addObserver:self selector:@selector(loadDefaults:) name:MGOLLoadDefaultsNotification object:nil];
         NSLog(@"MGOLView registered for notifications");        
     }
+    selection = NSMakeRect(0,0,0,0);
+    
     return self;
 }
 
@@ -109,37 +111,97 @@
         NSFrameRect(borderRect);    
     }
 
+    // Draw cells
     [cellColor set];
     for (y = 0; y < cellsY; y++) 
     {
         for (x = 0; x < cellsX; x++) 
         {
-            if ([cellProcessor isCellAlive:NSMakePoint(x+1, y+1)])
+            if ([cellProcessor isCellAlive:NSMakePoint(x, y)])
             {
-                NSRectFill(NSMakeRect((x * fullCellSize) + cellBorder, 
-                                      (y * fullCellSize) + cellBorder, 
-                                      pixelsPerCell, 
-                                      pixelsPerCell));
+                NSRectFill([self cellRect:NSMakePoint(x, y)]);
             }
         }
     } 
+
+    // Draw selection marker
+    if ((selection.size.width > 0) && (selection.size.height > 0))
+    {
+        [[NSColor redColor] set];
+        NSFrameRect([self cellsRect:selection]);    
+    }
+
 }
 
 - (void)mouseDown:(NSEvent *)theEvent 
 {
-    NSLog(@"MGOLView mouseDown");
+    //NSLog(@"MGOLView mouseDown");
     
     // determine if I handle theEvent
     // if not...
     //[super mouseDown:theEvent];
-
+    
     NSPoint eventLocation = [theEvent locationInWindow];
     NSPoint center = [self convertPoint:eventLocation fromView:nil];
-    int x = ((center.x-2) / fullCellSize) + 1;
-    int y = ((center.y-2) / fullCellSize) + 1;
+    NSPoint cell = [self convertFromViewToCell:center];
+    NSLog(@"MGOLView mouseDown %f,%f", cell.x, cell.y);    
+
+    /* This code works for flipping cells when mouse clicks
+    [cellProcessor flipCell:[self convertFromViewToCell:center]]; */
+
+    /* This code works for cell selection */
+    selection.origin = cell;
+    selection.size   = NSMakeSize(1,1);
+
+    [self setNeedsDisplay:YES]; 
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent 
+{
+    //NSLog(@"MGOLView mouseDragged");
+    NSPoint eventLocation = [theEvent locationInWindow];
+    NSPoint center = [self convertPoint:eventLocation fromView:nil];
+    NSPoint cell = [self convertFromViewToCell:center];
+
+    NSLog(@"MGOLView mouseDragged %f,%f", cell.x, cell.y);    
+    selection.size.width  = 1 + cell.x - selection.origin.x;
+    selection.size.height = 1 + cell.y - selection.origin.y;
     
-    [cellProcessor flipCell:NSMakePoint(x, y)];
-    [self setNeedsDisplay:YES];
+    [self setNeedsDisplay:YES]; 
+}
+
+- (NSPoint)convertFromCellToView:(NSPoint)cell;
+{
+    return NSMakePoint(cell.x * fullCellSize, cell.y * fullCellSize);
+}
+
+- (NSPoint)convertFromViewToCell:(NSPoint)pixel
+{
+    int x = (pixel.x / fullCellSize);
+    int y = (pixel.y / fullCellSize);
+    return NSMakePoint(x, y);
+}
+
+- (NSRect)cellRect:(NSPoint)cell
+{
+    NSPoint origin = [self convertFromCellToView:cell];
+    return NSMakeRect(origin.x + cellBorder, origin.y + cellBorder, pixelsPerCell, pixelsPerCell);
+}
+
+- (NSRect)cellsRect:(NSRect)cells
+{
+    NSPoint origin = [self convertFromCellToView:cells.origin];
+    int width      = cells.size.width * fullCellSize  + cellBorder;
+    int height     = cells.size.height * fullCellSize + cellBorder;
+    return NSMakeRect(origin.x, origin.y, width, height);
+}
+
+- (NSRect)cellRectWithBorder:(NSPoint)cell
+{
+    NSRect cellRect = [self cellRect:cell];
+    cellRect.size.width  += cellBorder;
+    cellRect.size.height += cellBorder;
+    return cellRect;
 }
 
 
