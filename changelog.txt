@@ -1,0 +1,24 @@
+My Game Of Life - Change Log
+changelog.txt
+
+Copyright (c) 2007 Eneko Alonso
+www.enekoalonso.com
+
+Version 1.0.3 2008-01-06
+Added Cell Structure Editor.
+
+Version 1.0.2 2007-12-31
+Customizable world size (up to 2046 x 1022, almost 2MB cells!).
+Added scroll bars to navigate world view.
+Added zoom slider on main screen.
+Added cell cycle counter.
+
+Version 1.0.1 2007-12-28
+Added process indicator.
+Added alive cell counter.
+Added cycles per second indicator.
+
+Version 1.0 2007-12-27
+Initial version.
+
+End of file.
