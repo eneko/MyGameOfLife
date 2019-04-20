@@ -6,21 +6,23 @@
 //  Copyright 2007 Eneko Alonso. All rights reserved.
 //
 
-#import "MGOLView.h"
 #import <math.h>
+#import "MGOLView.h"
+#import "MGOLGlobals.h"
+
 
 @implementation MGOLView
 
-- (id)initWithFrame:(NSRect)frame {
-    self = [super initWithFrame:frame];
+- (id)initWithFrame:(NSRect)frame 
+{
     NSLog(@"MGOLView initWithFrame");
-
+    self = [super initWithFrame:frame];
     if (self) {  
-        bgColor         = [[NSColor colorWithCalibratedRed: 25.0/255.0 green: 25.0/255.0 blue: 25.0/255.0 alpha:1.0] retain];
-        cellColor       = [[NSColor colorWithCalibratedRed:204.0/255.0 green:255.0/255.0 blue:102.0/255.0 alpha:1.0] retain];
-        cellBorderColor = [[NSColor blackColor] retain];
+        // Register as an observer for LoadDefaults messages
+        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+        [nc addObserver:self selector:@selector(loadDefaults:) name:MGOLLoadDefaultsNotification object:nil];
+        NSLog(@"MGOLView registered for notifications");        
     }
-    
     return self;
 }
 
@@ -30,29 +32,48 @@
     [bgColor         release];
     [cellColor       release];
     [cellBorderColor release];
+    
+    // Unregister from notifications
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    NSLog(@"MGOLView removed from notifications");        
+    
     [super dealloc];
+}
+
+- (void)loadDefaults:(NSNotification *)notification
+{
+    NSLog(@"MGOLView loadDefaults");
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    // Cell colors
+    NSData *bgColorAsData         = [defaults objectForKey:MGOLBackgroundColorKey];
+    NSData *cellColorAsData       = [defaults objectForKey:MGOLCellColorKey];
+    NSData *cellBorderColorAsData = [defaults objectForKey:MGOLCellBorderColorKey];
+    bgColor         = [[NSKeyedUnarchiver unarchiveObjectWithData:bgColorAsData] retain];
+    cellColor       = [[NSKeyedUnarchiver unarchiveObjectWithData:cellColorAsData] retain];
+    cellBorderColor = [[NSKeyedUnarchiver unarchiveObjectWithData:cellBorderColorAsData] retain];
+    
+    // Cell variables
+    pixelsPerCell  = [defaults integerForKey:MGOLPixelsPerCellKey];
+    drawCellBorder = [defaults boolForKey:MGOLDrawCellBorderKey];
+    cellBorder     = (int)drawCellBorder;
+    fullCellSize   = pixelsPerCell + cellBorder;
+
+    // Get world size
+    cellsX = [defaults integerForKey:MGOLWorldWidthKey];
+    cellsY = [defaults integerForKey:MGOLWorldHeightKey];
+
+    // Resize the view to fit cellsX and cellsY
+    [self setFrameSize:NSMakeSize(cellsX*fullCellSize + 1, cellsY*fullCellSize + 1)];
+    [self setNeedsDisplay:YES];
 }
 
 - (BOOL)isFlipped             { return YES; }
 - (BOOL)isOpaque              { return YES; }
 - (BOOL)acceptsFirstResponder { return YES; }
 
-- (unsigned int)frameCounter
-{
-    return frames;
-}
-
-- (void)resetFrameCounter
-{
-    frames = 0;
-}
-
 - (void)drawRect:(NSRect)rect
 {
-//    NSLog(@"MGOLView drawRect");
-
-    
-    
     // Initialize variables
     int x = 0;
     int y = 0;
@@ -60,10 +81,6 @@
     // Fill Background
     [bgColor set];
     NSRectFill([self bounds]);
-    
-    // Get world size
-    int cellsX = [cellProcessor worldSize].width;
-    int cellsY = [cellProcessor worldSize].height;    
     
     // Draw cell border lines
     if (drawCellBorder) 
@@ -93,43 +110,20 @@
         NSFrameRect(borderRect);    
     }
 
-    // Make sure cell processor is assigned
-    if (cellProcessor) 
+    [cellColor set];
+    for (y = 0; y < cellsY; y++) 
     {
-        [cellColor set];
-        for (y = 0; y < cellsY; y++) 
+        for (x = 0; x < cellsX; x++) 
         {
-            for (x = 0; x < cellsX; x++) 
+            if ([cellProcessor isCellAlive:NSMakePoint(x+1, y+1)])
             {
-                if ([cellProcessor isCellAlive:NSMakePoint(x+1, y+1)])
-                {
-                    NSRectFill(NSMakeRect((x * fullCellSize) + cellBorder, 
-                                          (y * fullCellSize) + cellBorder, 
-                                          pixelsPerCell, 
-                                          pixelsPerCell));
-                }
+                NSRectFill(NSMakeRect((x * fullCellSize) + cellBorder, 
+                                      (y * fullCellSize) + cellBorder, 
+                                      pixelsPerCell, 
+                                      pixelsPerCell));
             }
-        } 
-    }   
-    frames++;  
-}
-
-- (void)updateCellSize:(unsigned int)newPixelsPerCell
-        drawCellBorder:(BOOL)newDrawCellBorder
-{
-    NSLog(@"MGOLView updateCellSize");
-
-    // Save new size properties
-    pixelsPerCell  = newPixelsPerCell;
-    drawCellBorder = newDrawCellBorder;
-    cellBorder     = (int)drawCellBorder;
-    fullCellSize   = pixelsPerCell + cellBorder;
-    if (fullCellSize <= 0) return;
-
-    // Resize the view to fit cellsX and cellsY
-    [self setFrameSize:NSMakeSize([cellProcessor worldSize].width  * fullCellSize + 1, 
-                                  [cellProcessor worldSize].height * fullCellSize + 1)];
-    [self setNeedsDisplay:YES];
+        }
+    } 
 }
 
 - (void)mouseDown:(NSEvent *)theEvent 

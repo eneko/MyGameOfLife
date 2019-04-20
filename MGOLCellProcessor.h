@@ -7,7 +7,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "MGOLGlobals.h"
 
 @interface MGOLCellProcessor : NSObject {
     // Cell arrays

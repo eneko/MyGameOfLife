@@ -34,8 +34,14 @@
     IBOutlet NSTextField *lblWorldSize; 
     IBOutlet NSTextField *lblFramesPerSecond;
     IBOutlet NSProgressIndicator *progress;   
+    IBOutlet NSSlider    *slPixelsPerCell;
+    IBOutlet NSTextField *lblZoom;
 }
 
+// User defaults methods
+- (void)registerDefaults;
+
+- (IBAction)setCellSize:(id)sender;
 - (void)stepAnimation:(NSTimer *)timer;
 
 // Toolbar buttons

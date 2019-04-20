@@ -2,13 +2,13 @@
 
 dir
 13
-https://my-gameoflife.googlecode.com/svn/tags/version-1.0.3.1/English.lproj/Preferences.nib
+https://my-gameoflife.googlecode.com/svn/tags/version-1.0.3.2/English.lproj/Preferences.nib
 https://my-gameoflife.googlecode.com/svn
 
 
 
-2008-11-29T05:03:35.747600Z
-2
+2008-11-29T05:49:25.670662Z
+3
 eneko.alonso
 
 
@@ -32,10 +32,10 @@ file
 
 
 
-2008-11-29T18:53:01.000000Z
-3db4e8f435bf3c1cc209648089485bb8
-2008-11-29T05:03:35.747600Z
-2
+2008-11-29T18:53:13.000000Z
+ea4c8022c979561725a2fd074391b752
+2008-11-29T05:49:25.670662Z
+3
 eneko.alonso
 has-props
 
@@ -58,7 +58,7 @@ has-props
 
 
 
-17002
+18910
 
 designable.nib
 file
@@ -66,10 +66,10 @@ file
 
 
 
-2008-11-29T18:53:01.000000Z
-555c151cc63748ebe9caf32351761017
-2008-11-29T05:03:35.747600Z
-2
+2008-11-29T18:53:13.000000Z
+da64e70d6b49efddb460be96a54dea10
+2008-11-29T05:49:25.670662Z
+3
 eneko.alonso
 
 
@@ -92,5 +92,5 @@ eneko.alonso
 
 
 
-107481
+115771
 

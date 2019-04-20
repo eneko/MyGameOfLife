@@ -15,6 +15,8 @@
     IBOutlet MGOLCellProcessor *cellProcessor;
     
     // View properties
+    unsigned int cellsX;
+    unsigned int cellsY;    
     unsigned int pixelsPerCell;
     unsigned int cellBorder;
     unsigned int fullCellSize;
@@ -22,14 +24,8 @@
     NSColor     *bgColor;
     NSColor     *cellColor;
     NSColor     *cellBorderColor;
-
-    unsigned int frames;
 }
 
-- (void)resetFrameCounter;
-- (unsigned int)frameCounter;
-
-- (void)updateCellSize:(unsigned int)newPixelsPerCell
-        drawCellBorder:(BOOL)newDrawCellBorder;
+- (void)loadDefaults:(NSNotification *)notification;
 
 @end

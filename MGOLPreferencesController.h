@@ -12,11 +12,6 @@
     // Settings components
     IBOutlet NSButton    *chDrawCellBorders;
     
-    // Cell size components
-    IBOutlet NSTextField *edPixelsPerCell;
-    IBOutlet NSStepper   *stPixelsPerCell;
-    IBOutlet NSSlider    *slPixelsPerCell;
-    
     // World size components
     IBOutlet NSTextField *edWorldSizeX;
     IBOutlet NSTextField *edWorldSizeY;
@@ -51,12 +46,14 @@
     IBOutlet NSButton *chCellStayAlive8;
 }
 
-- (IBAction)setCellSize:(id)sender;
-//- (IBAction)setCellBorder:(id)sender;
+- (void)loadDefaults;
 
 // Preference Panel 
 - (IBAction)setWorldSizeX:(id)sender;
 - (IBAction)setWorldSizeY:(id)sender;
-
+- (IBAction)setDrawCellBorder:(id)sender;
+- (IBAction)setBackgroundColor:(id)sender;
+- (IBAction)setCellColor:(id)sender;
+- (IBAction)setCellBorderColor:(id)sender;
 
 @end

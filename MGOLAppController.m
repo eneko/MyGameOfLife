@@ -9,6 +9,7 @@
 #import "MGOLAppController.h"
 #import "MGOLPreferencesController.h"
 #import "MGOLStructureEditorController.h"
+#import "MGOLGlobals.h"
 
 @implementation MGOLAppController
 
@@ -17,11 +18,7 @@
     NSLog(@"MGOLAppController init");
     
     if (self) {
-        timerFPS = [NSTimer scheduledTimerWithTimeInterval:1/10.0 // 10 times per second 
-                                                    target:self 
-                                                  selector:@selector(updateFPS:) 
-                                                  userInfo:nil 
-                                                   repeats:YES];
+        [self registerDefaults];
     }
     
     preferencesPanel = nil;
@@ -38,14 +35,49 @@
     [super dealloc];
 }
 
+- (void)registerDefaults
+{
+    NSLog(@"MGOLAppController registerDefaults");
+
+    // Default values dictionary
+    NSMutableDictionary *defaultValues = [NSMutableDictionary dictionary];
+
+    // Initialize default colors
+    NSColor *bgColor         = [NSColor colorWithCalibratedRed: 25.0/255.0 green: 25.0/255.0 blue: 25.0/255.0 alpha:1.0];
+    NSColor *cellColor       = [NSColor colorWithCalibratedRed:204.0/255.0 green:255.0/255.0 blue:102.0/255.0 alpha:1.0];
+    NSColor *cellBorderColor = [NSColor blackColor];
+    NSData *bgColorAsData         = [NSKeyedArchiver archivedDataWithRootObject:bgColor];
+    NSData *cellColorAsData       = [NSKeyedArchiver archivedDataWithRootObject:cellColor];
+    NSData *cellBorderColorAsData = [NSKeyedArchiver archivedDataWithRootObject:cellBorderColor];
+    [defaultValues setObject:bgColorAsData         forKey:MGOLBackgroundColorKey];
+    [defaultValues setObject:cellColorAsData       forKey:MGOLCellColorKey];
+    [defaultValues setObject:cellBorderColorAsData forKey:MGOLCellBorderColorKey];
+    
+    // World variables
+    [defaultValues setObject:[NSNumber numberWithInt:4]    forKey:MGOLPixelsPerCellKey];
+    [defaultValues setObject:[NSNumber numberWithBool:YES] forKey:MGOLDrawCellBorderKey];
+    [defaultValues setObject:[NSNumber numberWithInt:200]  forKey:MGOLWorldWidthKey];
+    [defaultValues setObject:[NSNumber numberWithInt:100]  forKey:MGOLWorldHeightKey];
+    
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
+}
+
 - (void)windowDidLoad
 {
     NSLog(@"MGOLAppController windowDidLoad");
 }
 
--(void)awakeFromNib {
+-(void)awakeFromNib 
+{
     NSLog(@"MGOLAppController awakeFromNib");
-    [myView updateCellSize:4 drawCellBorder:YES];
+    timerFPS = [NSTimer scheduledTimerWithTimeInterval:1/10.0 // 10 times per second 
+                                                target:self 
+                                              selector:@selector(updateFPS:) 
+                                              userInfo:nil 
+                                               repeats:YES];
+    // Post notification for loading defaults
+    NSLog(@"MGOLAppController posting notification...");
+    [[NSNotificationCenter defaultCenter] postNotificationName:MGOLLoadDefaultsNotification object:self];
 }
 
 
@@ -104,8 +136,7 @@
 - (void)updateFPS:(NSTimer *)timer 
 {
 //    NSLog(@"MGOLAppController updateFPS");
-    [lblFramesPerSecond setStringValue:[NSString stringWithFormat:@"Cycles/s: %0.0f", [myView frameCounter] * (1/[timer timeInterval]) ]];
-    [myView resetFrameCounter];
+    [lblFramesPerSecond setStringValue:[NSString stringWithFormat:@"Cycles/s: %0.0f", (1/[timer timeInterval]) ]];
     
     [lblPopulation setStringValue:[NSString stringWithFormat:@"Population: %d", [cellProcessor population]]];
     [lblCycles     setStringValue:[NSString stringWithFormat:@"Cycles: %d",     [cellProcessor cycleCounter]]];
@@ -133,6 +164,20 @@
         structureEditor = [MGOLStructureEditorController new];
     }
     [structureEditor showWindow:self];
+}
+
+- (IBAction)setCellSize:(id)sender
+{
+    NSLog(@"MGOLAppController setCellSize");
+    
+    unsigned int pixelsPerCell = [sender intValue];
+    [slPixelsPerCell setIntValue:pixelsPerCell];
+    [lblZoom setStringValue:[NSString stringWithFormat:@"x%d", pixelsPerCell]];
+//    [myView updateCellSize:pixelsPerCell drawCellBorder:[myView drawCellBorder]];
+
+    // Save user defaults
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:pixelsPerCell forKey:@"pixelsPerCell"];
 }
 
 

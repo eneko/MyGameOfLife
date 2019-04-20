@@ -7,7 +7,7 @@
 //
 
 #import "MGOLCellProcessor.h"
-
+#import "MGOLGlobals.h"
 
 @implementation MGOLCellProcessor
 
