@@ -6,7 +6,6 @@
 //  Copyright 2007 Eneko Alonso. All rights reserved.
 //
 
-#import <math.h>
 #import "MGOLView.h"
 #import "MGOLGlobals.h"
 

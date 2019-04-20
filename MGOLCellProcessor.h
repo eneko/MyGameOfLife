@@ -18,7 +18,6 @@
     char **cellsNext;  // Points to next step
     char **cellsPrev;  // For pointer swaping
     
-    
     // Cell behavior settings
     char cellGrowsIf[9];      // 0..8 neightbors
     char cellStaysAliveIf[9]; // 0..8 neightbors
@@ -45,5 +44,25 @@
 - (unsigned int) cycleCounter;
 - (unsigned int) population;
 - (BOOL)isCellAlive:(NSPoint)cell;
+
+- (void)setCellBehavior:(id)sender
+              cellBorn0:(BOOL)cb0
+              cellBorn1:(BOOL)cb1
+              cellBorn2:(BOOL)cb2
+              cellBorn3:(BOOL)cb3
+              cellBorn4:(BOOL)cb4
+              cellBorn5:(BOOL)cb5
+              cellBorn6:(BOOL)cb6
+              cellBorn7:(BOOL)cb7
+              cellBorn8:(BOOL)cb8
+        cellStaysAlive0:(BOOL)cs0
+        cellStaysAlive1:(BOOL)cs1
+        cellStaysAlive2:(BOOL)cs2
+        cellStaysAlive3:(BOOL)cs3
+        cellStaysAlive4:(BOOL)cs4
+        cellStaysAlive5:(BOOL)cs5
+        cellStaysAlive6:(BOOL)cs6
+        cellStaysAlive7:(BOOL)cs7
+        cellStaysAlive8:(BOOL)cs8;
 
 @end

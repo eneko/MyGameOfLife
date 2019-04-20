@@ -10,14 +10,10 @@
 
 
 @interface MGOLCell : NSObject {
-    BOOL    isAlive;
     NSPoint position;
 }
 
 - (NSPoint)position;
-- (void) setPosition:(NSPoint) newPosition;
-- (BOOL)isAlive;
-- (void) setState:(BOOL)newState;
-- (BOOL) flip;
+- (void)setPosition:(NSPoint) newPosition;
 
 @end

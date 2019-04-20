@@ -55,5 +55,6 @@
 - (IBAction)setBackgroundColor:(id)sender;
 - (IBAction)setCellColor:(id)sender;
 - (IBAction)setCellBorderColor:(id)sender;
+- (IBAction)setCellBehavior:(id)sender;
 
 @end

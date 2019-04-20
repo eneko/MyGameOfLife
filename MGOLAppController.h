@@ -41,7 +41,11 @@
 // User defaults methods
 - (void)registerDefaults;
 
+// Load defaults listener
+- (void)loadDefaults:(NSNotification *)notification;
+
 - (IBAction)setCellSize:(id)sender;
+- (void)updateZoomSlider:(unsigned int)pixelsPerCell;
 - (void)stepAnimation:(NSTimer *)timer;
 
 // Toolbar buttons

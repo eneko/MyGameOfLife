@@ -12,9 +12,9 @@
 
 -(id)init
 {
+    NSLog(@"MGOLCell init");
     [super init];
     [self setPosition:NSMakePoint(0, 0)];
-    [self setState:NO];
     return self;
 }
 
@@ -25,23 +25,8 @@
 
 - (void)setPosition:(NSPoint)newPosition
 {
+    NSLog(@"MGOLCell setPosition");
     position = newPosition;
-}
-
-- (BOOL)isAlive
-{
-    return isAlive;
-}
-
-- (void)setState:(BOOL)newState
-{
-    isAlive = newState;
-}
-
-- (BOOL)flip
-{
-    isAlive = !isAlive;
-    return isAlive;
 }
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "MGOLStructure.h"
-
+#import "MGOLCell.h"
 
 @implementation MGOLStructure
 
@@ -15,7 +15,22 @@
 {
     NSLog(@"MGOLStructure init");
     [super init];
-    [self setStructureName:@"New structure"];
+    [self setStructureName:@"New structure"];    
+    [self setStructureSize:NSMakeSize(10, 10)];
+        
+    // Add some random cells
+    cells = [NSMutableArray new];
+    int i;
+    for (i=0; i<10; i++)
+    {
+        MGOLCell *cell = [MGOLCell new];
+        NSPoint newPoint;
+        do {
+            newPoint = NSMakePoint(random() % 10, random() % 10);
+        } while ([self indexOfCellAt:newPoint] > -1);
+        [cell setPosition:newPoint];
+        [cells addObject:cell];
+    }
     return self;
 }
 
@@ -23,6 +38,7 @@
 {
     NSLog(@"MGOLStructure dealloc");
     [structureName release];
+    [cells release];
     [super dealloc];
 }
 
@@ -76,5 +92,40 @@
     NSLog(@"MGOLStructure setStructureHeight");
     structureSize.height = newHeight;
 }
+
+- (BOOL)isCellAlive:(NSPoint)cell
+{
+    return ([self indexOfCellAt:cell] > -1);
+}
+
+- (int)indexOfCellAt:(NSPoint)cell
+{
+    int i;
+    for (i=0; i<[cells count]; i++)
+    {
+        MGOLCell *aCell = [cells objectAtIndex:i];
+        if (NSEqualPoints([aCell position], cell))
+            return i;
+    }
+    return -1;
+}
+
+- (void)flipCell:(NSPoint)cell
+{
+    NSLog(@"MGOLStructure flipCell");
+    int index = [self indexOfCellAt:cell];
+    if (index > -1)
+    {
+        [cells removeObjectAtIndex:index];
+    }
+    else
+    {
+        MGOLCell *newCell = [MGOLCell new];
+        [newCell setPosition:cell];
+        [cells addObject:newCell];
+//        [newCell release];
+    }
+}
+
 
 @end

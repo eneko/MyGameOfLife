@@ -187,4 +187,45 @@
     return cycleCounter;
 }
 
+- (void)setCellBehavior:(id)sender
+              cellBorn0:(BOOL)cb0
+              cellBorn1:(BOOL)cb1
+              cellBorn2:(BOOL)cb2
+              cellBorn3:(BOOL)cb3
+              cellBorn4:(BOOL)cb4
+              cellBorn5:(BOOL)cb5
+              cellBorn6:(BOOL)cb6
+              cellBorn7:(BOOL)cb7
+              cellBorn8:(BOOL)cb8
+        cellStaysAlive0:(BOOL)cs0
+        cellStaysAlive1:(BOOL)cs1
+        cellStaysAlive2:(BOOL)cs2
+        cellStaysAlive3:(BOOL)cs3
+        cellStaysAlive4:(BOOL)cs4
+        cellStaysAlive5:(BOOL)cs5
+        cellStaysAlive6:(BOOL)cs6
+        cellStaysAlive7:(BOOL)cs7
+        cellStaysAlive8:(BOOL)cs8
+{
+    cellGrowsIf[0] = cb0;  
+    cellGrowsIf[1] = cb1;  
+    cellGrowsIf[2] = cb2;  
+    cellGrowsIf[3] = cb3;  
+    cellGrowsIf[4] = cb4;  
+    cellGrowsIf[5] = cb5;  
+    cellGrowsIf[6] = cb6;  
+    cellGrowsIf[7] = cb7;  
+    cellGrowsIf[8] = cb8;  
+    cellStaysAliveIf[0] = cs0;  
+    cellStaysAliveIf[1] = cs1;  
+    cellStaysAliveIf[2] = cs2;  
+    cellStaysAliveIf[3] = cs3;  
+    cellStaysAliveIf[4] = cs4;  
+    cellStaysAliveIf[5] = cs5;  
+    cellStaysAliveIf[6] = cs6;  
+    cellStaysAliveIf[7] = cs7;  
+    cellStaysAliveIf[8] = cs8;  
+}
+
+
 @end

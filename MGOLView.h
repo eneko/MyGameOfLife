@@ -26,6 +26,7 @@
     NSColor     *cellBorderColor;
 }
 
+// Load defaults listener
 - (void)loadDefaults:(NSNotification *)notification;
 
 @end

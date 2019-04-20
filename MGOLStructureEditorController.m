@@ -21,6 +21,7 @@
 - (void)windowDidLoad
 {
     NSLog(@"MGOLStructureEditorController windowDidLoad");
+    [myView loadDefaults:nil];
 }
 
 - (IBAction)addStructure:(id)sender
@@ -31,6 +32,13 @@
 - (IBAction)removeStructure:(id)sender
 {
     NSLog(@"MGOLStructureEditorController removeStructure");
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+    NSLog(@"MGOLStructureEditorController tableViewSelectionDidChange");
+    NSArray *selection = [structureArray selectedObjects];
+    [myView setStructure:[selection lastObject]];
 }
 
 @end

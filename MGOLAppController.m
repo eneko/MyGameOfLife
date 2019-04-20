@@ -19,6 +19,9 @@
     
     if (self) {
         [self registerDefaults];
+        // Register as an observer for LoadDefaults messages
+        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+        [nc addObserver:self selector:@selector(loadDefaults:) name:MGOLLoadDefaultsNotification object:nil];        
     }
     
     preferencesPanel = nil;
@@ -30,6 +33,9 @@
 -(void) dealloc
 {
     NSLog(@"MGOLAppController dealloc");
+    // Unregister from notifications
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [preferencesPanel release];
     [structureEditor  release];
     [super dealloc];
@@ -58,8 +64,57 @@
     [defaultValues setObject:[NSNumber numberWithBool:YES] forKey:MGOLDrawCellBorderKey];
     [defaultValues setObject:[NSNumber numberWithInt:200]  forKey:MGOLWorldWidthKey];
     [defaultValues setObject:[NSNumber numberWithInt:100]  forKey:MGOLWorldHeightKey];
+
+    // Default cell behavior
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellBorn0"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellBorn1"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellBorn2"];
+    [defaultValues setObject:[NSNumber numberWithBool:YES] forKey:@"MGOLCellBorn3"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellBorn4"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellBorn5"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellBorn6"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellBorn7"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellBorn8"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellStayAlive0"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellStayAlive1"];
+    [defaultValues setObject:[NSNumber numberWithBool:YES] forKey:@"MGOLCellStayAlive2"];
+    [defaultValues setObject:[NSNumber numberWithBool:YES] forKey:@"MGOLCellStayAlive3"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellStayAlive4"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellStayAlive5"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellStayAlive6"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellStayAlive7"];
+    [defaultValues setObject:[NSNumber numberWithBool:NO]  forKey:@"MGOLCellStayAlive8"];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
+}
+
+- (void)loadDefaults:(NSNotification *)notification
+{
+    NSLog(@"MGOLAppController loadDefaults");
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [self updateZoomSlider:[defaults integerForKey:MGOLPixelsPerCellKey]];    
+    [cellProcessor setWorldSize:NSMakeSize([defaults integerForKey:MGOLWorldWidthKey], 
+                                           [defaults integerForKey:MGOLWorldHeightKey])];
+
+    [cellProcessor setCellBehavior:self
+                         cellBorn0:[defaults boolForKey:@"MGOLCellBorn0"]
+                         cellBorn1:[defaults boolForKey:@"MGOLCellBorn1"]
+                         cellBorn2:[defaults boolForKey:@"MGOLCellBorn2"]
+                         cellBorn3:[defaults boolForKey:@"MGOLCellBorn3"]
+                         cellBorn4:[defaults boolForKey:@"MGOLCellBorn4"]
+                         cellBorn5:[defaults boolForKey:@"MGOLCellBorn5"]
+                         cellBorn6:[defaults boolForKey:@"MGOLCellBorn6"]
+                         cellBorn7:[defaults boolForKey:@"MGOLCellBorn7"]
+                         cellBorn8:[defaults boolForKey:@"MGOLCellBorn8"]
+                   cellStaysAlive0:[defaults boolForKey:@"MGOLCellStayAlive0"]
+                   cellStaysAlive1:[defaults boolForKey:@"MGOLCellStayAlive1"]
+                   cellStaysAlive2:[defaults boolForKey:@"MGOLCellStayAlive2"]
+                   cellStaysAlive3:[defaults boolForKey:@"MGOLCellStayAlive3"]
+                   cellStaysAlive4:[defaults boolForKey:@"MGOLCellStayAlive4"]
+                   cellStaysAlive5:[defaults boolForKey:@"MGOLCellStayAlive5"]
+                   cellStaysAlive6:[defaults boolForKey:@"MGOLCellStayAlive6"]
+                   cellStaysAlive7:[defaults boolForKey:@"MGOLCellStayAlive7"]
+                   cellStaysAlive8:[defaults boolForKey:@"MGOLCellStayAlive8"]];
 }
 
 - (void)windowDidLoad
@@ -136,7 +191,7 @@
 - (void)updateFPS:(NSTimer *)timer 
 {
 //    NSLog(@"MGOLAppController updateFPS");
-    [lblFramesPerSecond setStringValue:[NSString stringWithFormat:@"Cycles/s: %0.0f", (1/[timer timeInterval]) ]];
+    [lblFramesPerSecond setStringValue:[NSString stringWithFormat:@"Cycles/s: %0.0f", (1/[timerProcessor timeInterval]) ]];
     
     [lblPopulation setStringValue:[NSString stringWithFormat:@"Population: %d", [cellProcessor population]]];
     [lblCycles     setStringValue:[NSString stringWithFormat:@"Cycles: %d",     [cellProcessor cycleCounter]]];
@@ -168,19 +223,21 @@
 
 - (IBAction)setCellSize:(id)sender
 {
-    NSLog(@"MGOLAppController setCellSize");
-    
-    unsigned int pixelsPerCell = [sender intValue];
-    [slPixelsPerCell setIntValue:pixelsPerCell];
-    [lblZoom setStringValue:[NSString stringWithFormat:@"x%d", pixelsPerCell]];
-//    [myView updateCellSize:pixelsPerCell drawCellBorder:[myView drawCellBorder]];
-
+    NSLog(@"MGOLAppController setCellSize");    
+    [self updateZoomSlider:[sender intValue]];
     // Save user defaults
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:pixelsPerCell forKey:@"pixelsPerCell"];
+    [defaults setInteger:[sender intValue] forKey:@"pixelsPerCell"];
+    // Post notification for loading defaults
+    [[NSNotificationCenter defaultCenter] postNotificationName:MGOLLoadDefaultsNotification object:self];
 }
 
-
+- (void)updateZoomSlider:(unsigned int)pixelsPerCell
+{
+    NSLog(@"MGOLAppController updateZoomSlider");
+    [slPixelsPerCell setIntValue:pixelsPerCell];
+    [lblZoom setStringValue:[NSString stringWithFormat:@"x%d", pixelsPerCell]];
+}
 
 
 @end

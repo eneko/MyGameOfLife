@@ -7,18 +7,28 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "MGOLStructure.h"
 
-
-@interface MGOLStructureView : NSView {
+@interface MGOLStructureView : NSView 
+{
+    // Cell Structure
+    IBOutlet MGOLStructure *cellStructure;
     
-    // Settings components
-    IBOutlet NSButton    *chDrawCellBorders;
-
-    // Color components
-    IBOutlet NSColorWell *coBackground;
-    IBOutlet NSColorWell *coCell; 
-    IBOutlet NSColorWell *coCellBorder;
-    
+    // View properties
+    unsigned int cellsX;
+    unsigned int cellsY;    
+    unsigned int pixelsPerCell;
+    unsigned int cellBorder;
+    unsigned int fullCellSize;
+    BOOL         drawCellBorder;
+    NSColor     *bgColor;
+    NSColor     *cellColor;
+    NSColor     *cellBorderColor;
 }
+
+// Load defaults listener
+- (void)loadDefaults:(NSNotification *)notification;
+
+- (void)setStructure:(MGOLStructure *)structure;
 
 @end

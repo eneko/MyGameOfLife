@@ -15,6 +15,7 @@
     IBOutlet NSTextField       *edStructureWidth;
     IBOutlet NSTextField       *edStructureHeight;
     IBOutlet MGOLStructureView *myView;
+    IBOutlet NSArrayController *structureArray;
 }
 
 - (IBAction)addStructure:(id)sender;

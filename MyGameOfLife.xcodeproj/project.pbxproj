@@ -90,10 +90,10 @@
 			children = (
 				959BF5AB0D1EE1BF007BF920 /* MGOLAppController.h */,
 				959BF5AC0D1EE1BF007BF920 /* MGOLAppController.m */,
-				959BF59E0D1ECF05007BF920 /* MGOLView.h */,
-				959BF59F0D1ECF05007BF920 /* MGOLView.m */,
 				9531DA580D31A26B00E391E4 /* MGOLCellProcessor.h */,
 				9531DA590D31A26B00E391E4 /* MGOLCellProcessor.m */,
+				959BF59E0D1ECF05007BF920 /* MGOLView.h */,
+				959BF59F0D1ECF05007BF920 /* MGOLView.m */,
 			);
 			name = "Main Window";
 			sourceTree = "<group>";
@@ -176,14 +176,14 @@
 		9531DA550D319F8100E391E4 /* Structure Editor */ = {
 			isa = PBXGroup;
 			children = (
+				958237CD0D315A850000C742 /* MGOLCell.h */,
+				958237CE0D315A850000C742 /* MGOLCell.m */,
+				958237CA0D3159FE0000C742 /* MGOLStructure.h */,
+				958237CB0D3159FE0000C742 /* MGOLStructure.m */,
 				958237950D3152330000C742 /* MGOLStructureEditorController.h */,
 				958237960D3152330000C742 /* MGOLStructureEditorController.m */,
 				958237920D3151660000C742 /* MGOLStructureView.h */,
 				958237930D3151660000C742 /* MGOLStructureView.m */,
-				958237CA0D3159FE0000C742 /* MGOLStructure.h */,
-				958237CB0D3159FE0000C742 /* MGOLStructure.m */,
-				958237CD0D315A850000C742 /* MGOLCell.h */,
-				958237CE0D315A850000C742 /* MGOLCell.m */,
 			);
 			name = "Structure Editor";
 			sourceTree = "<group>";
