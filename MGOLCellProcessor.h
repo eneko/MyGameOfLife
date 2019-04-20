@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "MGOLStructure.h"
 
 @interface MGOLCellProcessor : NSObject {
     // Cell arrays
@@ -64,5 +65,9 @@
         cellStaysAlive6:(BOOL)cs6
         cellStaysAlive7:(BOOL)cs7
         cellStaysAlive8:(BOOL)cs8;
+
+- (MGOLStructure *)structureFromRect:(NSRect)rect;
+- (void)placeStructure:(MGOLStructure *)structure At:(NSPoint)point;
+
 
 @end

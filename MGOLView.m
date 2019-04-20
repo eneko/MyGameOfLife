@@ -21,6 +21,9 @@
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
         [nc addObserver:self selector:@selector(loadDefaults:) name:MGOLLoadDefaultsNotification object:nil];
         NSLog(@"MGOLView registered for notifications");        
+        
+        // Register for drag & drop operations
+        [self registerForDraggedTypes:[NSArray arrayWithObject:MGOLStructureDataType]];
     }
     selection = NSMakeRect(0,0,0,0);
     
@@ -204,5 +207,9 @@
     return cellRect;
 }
 
+- (NSRect)selection
+{
+    return selection;
+}
 
 @end

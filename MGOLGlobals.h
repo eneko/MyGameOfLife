@@ -28,4 +28,7 @@
 
 #define MGOLLoadDefaultsNotification @"MGOLLoadDefaultsNotification"
 
+#define MGOLStructureDataType @"MGOLStructureDataType"
+
+
 #endif

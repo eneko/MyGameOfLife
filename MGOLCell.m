@@ -29,4 +29,26 @@
     position = newPosition;
 }
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"cell: %0f, %0f\n", position.x, position.y];
+}    
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    NSLog(@"MGOLCell encodeWithCoder");
+    [coder encodePoint:position forKey:@"MGOLCellPositionKey"];
+}
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+    NSLog(@"MGOLCell initWithCoder");
+    if (self = [super init])
+    {
+        [self setPosition:[coder decodePointForKey:@"MGOLCellPositionKey"]];
+    }
+    return self;
+}
+
+
 @end

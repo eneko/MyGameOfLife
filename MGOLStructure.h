@@ -25,9 +25,13 @@
 - (void)setStructureWidth:(unsigned int)newWidth;
 - (void)setStructureHeight:(unsigned int)newHeight;
 
+- (void)setCells:(NSArray *)newCells;
+
 - (BOOL)isCellAlive:(NSPoint)cell;
 - (void)flipCell:(NSPoint)cell;
 - (int)indexOfCellAt:(NSPoint)cell;
 
+- (void)clear;
+- (NSArray *)cellArray;
 
 @end

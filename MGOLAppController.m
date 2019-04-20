@@ -239,5 +239,50 @@
     [lblZoom setStringValue:[NSString stringWithFormat:@"x%d", pixelsPerCell]];
 }
 
+- (IBAction)copyCells:(id)sender
+{
+    NSLog(@"MGOLAppController copyCells");
+    if (NSEqualSizes([myView selection].size, NSMakeSize(0, 0)))
+    {
+        NSLog(@"MGOLAppController copyCells - No selection!");
+        return;
+    }
+    [self writeStructure:[cellProcessor structureFromRect:[myView selection]]
+            ToPasteboard:[NSPasteboard generalPasteboard]];
+}
+
+- (IBAction)pasteCells:(id)sender
+{
+    NSLog(@"MGOLAppController pasteCells");
+    if (![self readStructureFromPasteboard:[NSPasteboard generalPasteboard]])
+    {
+        NSBeep();
+        return;
+    }
+    [myView setNeedsDisplay:YES];
+}
+
+- (void)writeStructure:(MGOLStructure *)structure ToPasteboard:(NSPasteboard *)pb
+{
+    NSLog(@"MGOLAppController writeStructureToPasteboard - structure:\n%@", structure);
+    [pb declareTypes:[NSArray arrayWithObject:MGOLStructureDataType] owner:self];
+    NSData *structureAsData = [NSKeyedArchiver archivedDataWithRootObject:structure];
+    [pb setData:structureAsData forType:MGOLStructureDataType];
+}
+
+- (BOOL)readStructureFromPasteboard:(NSPasteboard *)pb
+{
+    NSLog(@"MGOLAppController readStructureFromPasteboard");            
+    NSString *type = [pb availableTypeFromArray:[NSArray arrayWithObject:MGOLStructureDataType]];
+    if (type)
+    {
+        NSData *structureAsData = [pb dataForType:MGOLStructureDataType];
+        MGOLStructure *structure = [NSKeyedUnarchiver unarchiveObjectWithData:structureAsData];
+        NSLog(@"MGOLAppController readStructureFromPasteboard - structure:\n%@", structure);            
+        [cellProcessor placeStructure:structure At:[myView selection].origin];
+        return YES;
+    }
+    return NO;
+}
 
 @end

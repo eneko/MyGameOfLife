@@ -15,11 +15,11 @@
 {
     NSLog(@"MGOLStructure init");
     [super init];
+    cells = [NSMutableArray new];
     [self setStructureName:@"New structure"];    
     [self setStructureSize:NSMakeSize(10, 10)];
         
-    // Add some random cells
-    cells = [NSMutableArray new];
+    /* Add some random cells
     int i;
     for (i=0; i<10; i++)
     {
@@ -30,7 +30,7 @@
         } while ([self indexOfCellAt:newPoint] > -1);
         [cell setPosition:newPoint];
         [cells addObject:cell];
-    }
+    }*/
     return self;
 }
 
@@ -120,12 +120,64 @@
     }
     else
     {
-        MGOLCell *newCell = [MGOLCell new];
+        MGOLCell *newCell = [[MGOLCell new] retain];
         [newCell setPosition:cell];
         [cells addObject:newCell];
-//        [newCell release];
+        [newCell release];
     }
 }
 
+- (void)clear
+{
+    NSLog(@"MGOLStructure clear");
+    [cells removeAllObjects];
+}
 
+- (NSArray *)cellArray
+{
+    return cells;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    NSLog(@"MGOLStructure encodeWithCoder");
+    [coder encodeObject:structureName forKey:@"MGOLStructureStructureNameKey"];
+    [coder encodeSize:structureSize   forKey:@"MGOLStructureStructureSizeKey"];
+    [coder encodeObject:cells         forKey:@"MGOLStructureCellsKey"];
+}
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+    NSLog(@"MGOLStructure initWithCoder");
+    if (self = [super init])//WithCoder:coder])
+    {
+        cells = [NSMutableArray new];
+        [self setStructureName:[coder decodeObjectForKey:@"MGOLStructureStructureNameKey"]];
+        [self setStructureSize:[coder decodeSizeForKey:@"MGOLStructureStructureSizeKey"]];
+        [self setCells:[coder decodeObjectForKey:@"MGOLStructureCellsKey"]];
+    }
+    return self;
+}
+
+- (void)setCells:(NSArray *)newCells
+{
+    NSLog(@"MGOLStructure setCells");
+    [cells setArray:newCells];
+}
+
+- (NSString *)description
+{
+    NSString *desc = [NSString new];    
+    desc = [desc stringByAppendingString:@"Structure:\n"];
+    
+    int i;
+    for (i=0; i<[cells count]; i++)
+    {
+        desc = [desc stringByAppendingFormat:@"%@", [cells objectAtIndex:i]];
+    }    
+    
+    desc = [desc stringByAppendingString:@"End of Structure."];
+    //[desc autorelease];
+    return desc;
+}
 @end

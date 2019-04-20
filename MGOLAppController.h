@@ -57,4 +57,11 @@
 - (IBAction)showPreferences:(id)sender;
 - (IBAction)showStructureEditor:(id)sender;
 
+// Pasteboard
+- (IBAction)copyCells:(id)sender;
+- (IBAction)pasteCells:(id)sender;
+- (void)writeStructure:(MGOLStructure *)structure ToPasteboard:(NSPasteboard *)pb;
+- (BOOL)readStructureFromPasteboard:(NSPasteboard *)pb;
+
+
 @end

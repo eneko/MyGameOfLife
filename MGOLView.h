@@ -36,5 +36,6 @@
 - (NSPoint)convertFromViewToCell:(NSPoint)pixel;
 - (NSRect)cellRect:(NSPoint)cell;
 - (NSRect)cellsRect:(NSRect)cells;
+- (NSRect)selection;
 
 @end

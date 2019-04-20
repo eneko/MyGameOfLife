@@ -228,5 +228,41 @@
     cellStaysAliveIf[8] = cs8;  
 }
 
+- (MGOLStructure *)structureFromRect:(NSRect)rect
+{
+    NSLog(@"MGOLCellProcessor structureFromRect");
+    MGOLStructure *structure = [[MGOLStructure new] retain];
+
+    [structure autorelease];
+    [structure clear];
+    [structure setStructureSize:rect.size];
+    
+    int x,y;    
+    for(y = rect.origin.y; y < rect.origin.y + rect.size.height; y++)
+    {
+        for(x = rect.origin.x; x < rect.origin.x + rect.size.width; x++)
+        {
+            if ([self isCellAlive:NSMakePoint(x, y)])
+            {
+                [structure flipCell:NSMakePoint(x - rect.origin.x, y - rect.origin.y)];
+            }
+        }
+    }
+    
+    return structure;
+}
+
+- (void)placeStructure:(MGOLStructure *)structure At:(NSPoint)point
+{
+    NSLog(@"MGOLCellProcessor placeStructureAt: %0f,%0f", point.x, point.y);
+    int i;
+    NSArray *cells = [structure cellArray];
+    for (i = 0; i < [cells count]; i++)
+    {
+        MGOLCell *cell = [cells objectAtIndex:i];
+        [self setCell:NSMakePoint([cell position].x + point.x, [cell position].y + point.y)
+                alive:YES];
+    }            
+}
 
 @end
